@@ -6,34 +6,25 @@
     <title>Chat</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
-
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
-            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-            crossorigin="anonymous">
-    </script>
-
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="main.js"></script>
 </head>
 <body>
     <div id="container">
-        <h3>El Club de los Tigritos</h3>            
+        <h3 v-text="room_name"></h3>            
         <div id="chat_window">
-            <ul id="chat_messages">
-                <li>
-                    <div class="message">
-                        <div class="header">
-                            <span class="sender">Amisa</span>
-                        </div>
-                        <span class="content">El club de los tigritos</span>
-                    </div>
-                </li>
-            </ul>
-            <form id="chat_form">
-                <input id="chat_input" type="text" placeholder="Enter message..." id="message" />
+            <div id="chat_messages">
+                <ul>
+                    <chatmessage v-for="(message, index) in messages" :message="message" :key="index"></chatmessage>
+                </ul>
+            </div>
+            <form v-on:submit.prevent="sendMessage" id="chat_form">
+                <input v-model="chat_input" id="chat_input" type="text" placeholder="Enter message..." id="message" autocomplete="off"/>
                 <button id="submit_button" type="submit" value="Send">Send</button>
             </form>
         </div>
     </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

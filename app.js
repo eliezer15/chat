@@ -6,25 +6,24 @@ const io = require('socket.io')(server);
 app.use(express.static('public'));
 
 var messages = [];
-var storeMessages = function(name, data) {
-    messages.push({name: name, data: data});
+var storeMessages = function(sender, content) {
+    messages.push({sender: sender, content: content});
     if (messages.length > 10) {
         messages.shift();
     }
 }
 io.on('connection', function(client) {
-    console.log('Client connected...');
-
-    client.on('messages', function(data) {
-        client.broadcast.emit('messages', data);
-        client.emit('messages', data);
-        storeMessages(client.nickname, data);
+    
+    client.on('messages', function(content) {
+        client.broadcast.emit('messages', client.nickname, content);
+        client.emit('messages', client.nickname, content);
+        storeMessages(client.nickname, content);
     });
 
     client.on('join', function(name) {
         client.nickname = name;
         messages.forEach(function(message) {
-            client.emit('messages', message.name + ': ' + message.data);
+            client.emit('messages', message.sender, message.content);
         });
     });
 
