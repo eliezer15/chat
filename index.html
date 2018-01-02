@@ -21,6 +21,15 @@
                 <button id="submit_button" type="submit" value="Send">Send</button>
             </form>
         </div>
+        <div id="online_users">
+            <h4>Online</h4>
+            <ul>
+                <li v-for="(connection, index) in online_users" 
+                    :key="index" 
+                    v-text="connection.nickname"
+                    v-bind:style="{ color: connection.color}"></li>
+            </ul>
+        </div>
     </div>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.js"></script>
     <script src="/socket.io/socket.io.js"></script>

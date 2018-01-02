@@ -22,6 +22,10 @@ io.on('connection', function(client) {
 
     client.on('join', function(name) {
         client.nickname = name;
+
+        client.broadcast.emit('join', client.nickname);
+        client.emit('join', client.nickname);
+        
         messages.forEach(function(message) {
             client.emit('messages', message.sender, message.content);
         });

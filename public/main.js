@@ -5,7 +5,9 @@ const ChatMessage = {
         <li>
             <div class="message">
                 <div class="header">
-                    <span class="sender">{{ message.sender }}</span>
+                    <span class="nickname" v-bind:style="{color: message.sender.color}">
+                        {{ message.sender.nickname }}
+                    </span>
                 </div>
                 <span class="content">{{ message.content }}</span>
             </div>
@@ -21,10 +23,8 @@ const container = new Vue({
     data: {
         'chat_input': '',
         'room_name': 'El Club De Los Tigritos',
-        'messages': [
-            { sender: 'amisa', content: 'Wey klk'},
-            { sender: 'luis', content: 'dime a ver mi hermano'},
-        ]
+        'messages': [],
+        'online_users':[]
     },
     methods: {
         sendMessage: function(e) {
@@ -49,8 +49,24 @@ socket.on('connect', function(data) {
     socket.emit('join', nickname);
 });
 
-socket.on('messages', function(sender, content){
-    console.log(sender);
-    console.log(content);
-    container.messages.push({sender: sender, content: content});
+socket.on('join', function(nickname) {
+    let color = color_aray.next();
+    container.online_users.push({nickname: nickname, color: color});
 });
+
+socket.on('messages', function(sender, content){
+    var user = container.online_users.find(function(u) { return u.nickname === sender});
+    container.messages.push({sender: user, content: content});
+});
+
+//Round Robin array implementation
+var color_aray = {
+    next_index: 0,
+    array: ['red', 'blue', 'green', 'purple', 'magenta', 'aqua', 'orange'],
+    next: function() {
+        var toReturn = this.array[this.next_index];
+        this.next_index = ((this.next_index + 1) % this.array.length);
+        
+        return toReturn;
+    }
+}
