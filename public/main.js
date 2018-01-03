@@ -43,7 +43,9 @@ socket.on('connect', function(data) {
         nickname = Cookies.get('nickname');
     }
     else {
-        nickname = prompt("What is your nickname?");
+        while (nickname === '' || nickname.length > 15) {
+            nickname = prompt("What is your nickname? (Shorter than 15 letters)");
+        }
         Cookies.set('nickname', nickname);
     }
     socket.emit('join', nickname);
