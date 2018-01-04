@@ -1,4 +1,4 @@
-//Vue Code
+//Vue Container
 const ChatMessage = {
     props:['message'],
     template:`
@@ -15,6 +15,7 @@ const ChatMessage = {
     `
 }
 
+//Vue Instance
 const container = new Vue({
     el: '#container',
     components: {
@@ -24,13 +25,20 @@ const container = new Vue({
         'chat_input': '',
         'room_name': 'El Club De Los Tigritos',
         'messages': [],
-        'online_users':[]
+        'online_users':[],
+        'user_typing_message': '',
+        'users_typing':[]
+    },
+    watch: {
+        chat_input: function(new_input) {
+            socket.emit('typing');
+        }
     },
     methods: {
-        sendMessage: function(e) {
+        send_message: function(e) {
             socket.emit('messages', this.chat_input);
             this.chat_input = '';
-        }
+        },
     }
 });
 
@@ -61,7 +69,13 @@ socket.on('save', function(user) {
 
 socket.on('join', function(online_users) {
     container.online_users = online_users;
-    console.log(container.online_users);
+});
+
+socket.on('typing', function(user) {
+    const index = (container.users_typing.push(user.nickname)) - 1;
+    setTimeout(function(index) {
+        container.users_typing.splice(index, 1);
+    }, 1000);
 });
 
 socket.on('messages', function(user, content){
@@ -75,4 +89,21 @@ socket.on('logout', function(online_users) {
 socket.on('duplicate', function() {
     alert('You are already logged in to chat. Please use the other open tab');
     socket.disconnect(true);
-})
+});
+
+//Interval function to handle the "is typing"
+
+setInterval(function() {
+    const unique_names = [...new Set(container.users_typing)];
+    if (unique_names.length == 0) {
+        container.user_typing_message = '';
+    }
+    else if (unique_names.length == 1) {
+        container.user_typing_message = `${unique_names[0]} is typing...`;
+    }
+    else {
+        //Snippet to get uniques from https://davidwalsh.name/array-unique
+        const names = unique_names.join(' and ');
+        container.user_typing_message = `${names} are typing...`;
+    }
+}, 100);

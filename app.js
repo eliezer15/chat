@@ -29,11 +29,16 @@ const color_aray = {
 io.on('connection', function(client) {
 
     client.on('join', function(user, from_cookie) {
-
-        if (from_cookie && (online_users.find((u) => u.nickname === user.nickname))) {
+        if (from_cookie && online_users.find((u) => u.nickname === user.nickname)) {
             client.emit('duplicate');
         }
         else {
+            let index = 1;
+            const original_nickname = user.nickname;
+            while (online_users.find((u) => u.nickname === user.nickname)) {
+                user.nickname = original_nickname + (++index);
+            }
+
             user.color = from_cookie? user.color: color_aray.next();
             client.user = user;
 
@@ -48,6 +53,10 @@ io.on('connection', function(client) {
                 client.emit('messages', message.user, message.content);
             });
         }
+    });
+
+    client.on('typing', function() {
+        client.broadcast.emit('typing', client.user);
     });
 
     client.on('messages', function(content) {

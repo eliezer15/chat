@@ -52,6 +52,14 @@ body {
 #chat_messages ul {
     list-style: none;
     padding-left: 0px;
+    margin-bottom: 10px;
+}
+
+#user_typing_message {
+    margin-left: 15px;
+    font-size: 14px;
+    color: #545454;
+    height: 25px; /* I need this so that the rest of the messages don't shift up when the text appears */
 }
 .message {
     background-color: white;

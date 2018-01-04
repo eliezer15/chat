@@ -16,7 +16,8 @@
                     <chatmessage v-for="(message, index) in messages" :message="message" :key="index"></chatmessage>
                 </ul>
             </div>
-            <form v-on:submit.prevent="sendMessage" id="chat_form">
+            <span id="user_typing_message" v-text="user_typing_message"></span>
+            <form v-on:submit.prevent="send_message" id="chat_form">
                 <input v-model="chat_input" id="chat_input" type="text" placeholder="Enter message..." id="message" autocomplete="off"/>
                 <button id="submit_button" type="submit" value="Send">Send</button>
             </form>
