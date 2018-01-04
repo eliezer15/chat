@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const config = require('./config');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
@@ -77,4 +78,4 @@ app.get('/', function(req, res) {
     res.sendFile(__dirname + '/index.html');
 });
 
-server.listen(8080);
+server.listen(config.Port);
