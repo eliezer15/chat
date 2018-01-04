@@ -24,10 +24,10 @@
         <div id="online_users">
             <h4>Online</h4>
             <ul>
-                <li v-for="(connection, index) in online_users" 
+                <li v-for="(user, index) in online_users" 
                     :key="index" 
-                    v-text="connection.nickname"
-                    v-bind:style="{ color: connection.color}"></li>
+                    v-text="user.nickname"
+                    v-bind:style="{ color: user.color}"></li>
             </ul>
         </div>
     </div>

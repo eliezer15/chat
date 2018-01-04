@@ -5,8 +5,8 @@ const ChatMessage = {
         <li>
             <div class="message">
                 <div class="header">
-                    <span class="nickname" v-bind:style="{color: message.sender.color}">
-                        {{ message.sender.nickname }}
+                    <span class="nickname" v-bind:style="{color: message.user.color}">
+                        {{ message.user.nickname }}
                     </span>
                 </div>
                 <span class="content">{{ message.content }}</span>
@@ -39,36 +39,40 @@ var socket = io.connect('http://localhost:8080');
 
 socket.on('connect', function(data) {
     let nickname = '';
-    if (Cookies.get('nickname')) {
-        nickname = Cookies.get('nickname');
+    let user = {};
+    let from_cookie = false;
+
+    if (Cookies.get('user')) {
+        user = JSON.parse(Cookies.get('user'));
+        from_cookie = true;
     }
     else {
         while (nickname === '' || nickname.length > 15) {
             nickname = prompt("What is your nickname? (Shorter than 15 letters)");
         }
-        Cookies.set('nickname', nickname);
+        user = {nickname: nickname};
     }
-    socket.emit('join', nickname);
+    socket.emit('join', user, from_cookie);
 });
 
-socket.on('join', function(nickname) {
-    let color = color_aray.next();
-    container.online_users.push({nickname: nickname, color: color});
+socket.on('save', function(user) {
+    Cookies.set('user', JSON.stringify(user));
 });
 
-socket.on('messages', function(sender, content){
-    var user = container.online_users.find(function(u) { return u.nickname === sender});
-    container.messages.push({sender: user, content: content});
+socket.on('join', function(online_users) {
+    container.online_users = online_users;
+    console.log(container.online_users);
 });
 
-//Round Robin array implementation
-var color_aray = {
-    next_index: 0,
-    array: ['red', 'blue', 'green', 'purple', 'magenta', 'aqua', 'orange'],
-    next: function() {
-        var toReturn = this.array[this.next_index];
-        this.next_index = ((this.next_index + 1) % this.array.length);
-        
-        return toReturn;
-    }
-}
+socket.on('messages', function(user, content){
+    container.messages.push({user: user, content: content});
+});
+
+socket.on('logout', function(online_users) {
+    container.online_users = online_users;
+});
+
+socket.on('duplicate', function() {
+    alert('You are already logged in to chat. Please use the other open tab');
+    socket.disconnect(true);
+})
