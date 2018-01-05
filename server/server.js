@@ -75,7 +75,8 @@ io.on('connection', function(client) {
 
 });
 app.get('/', function(req, res) {
-    res.sendFile(__dirname + '/index.html');
+    res.status(200).send('Server is up!')
 });
 
 server.listen(config.Port);
+console.log('Listening on port ' + config.Port);

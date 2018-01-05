@@ -43,7 +43,7 @@ const container = new Vue({
 });
 
 //Global IO Code
-var socket = io.connect(config.ServerUrl);
+var socket = require('socket.io-client')(config.ServerUrl);
 
 socket.on('connect', function(data) {
     let nickname = '';
@@ -79,6 +79,7 @@ socket.on('typing', function(user) {
 });
 
 socket.on('messages', function(user, content){
+    container.users_typing = [];
     container.messages.push({user: user, content: content});
 });
 
