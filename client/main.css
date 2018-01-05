@@ -90,7 +90,7 @@ body {
     height: 20px;
     padding: 10px 10px;
     font-size: 16px;
-    width: 100%;
+    width: 98%;
 }
 
 #submit_button {
@@ -106,4 +106,26 @@ body {
 #submit_button:hover {
     background-color: #0a7f6f;
     cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+    #container {
+        width: 100%;
+        height: 93vh;
+    }
+
+    #chat_window {
+        width: 100%;
+        border-radius: 0px;
+    }
+
+    #container h3 {
+        text-align: center;
+    }
+
+    #online_users {
+        visibility: hidden;
+        clear: both;
+        display: none;
+    }
 }
