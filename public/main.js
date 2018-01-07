@@ -43,7 +43,7 @@ const container = new Vue({
 });
 
 //Global IO Code
-var socket = require('socket.io-client')(config.ServerUrl);
+var socket = io.connect(config.ServerUrl);
 
 socket.on('connect', function(data) {
     let nickname = '';
