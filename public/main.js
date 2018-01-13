@@ -22,12 +22,14 @@ const container = new Vue({
         chatmessage: ChatMessage
     },
     data: {
+        'nickname_input':'',
         'chat_input': '',
         'room_name': 'El Club De Los Tigritos',
         'messages': [],
         'online_users':[],
         'user_typing_message': '',
-        'users_typing':[]
+        'users_typing':[],
+        'is_loggedin': false
     },
     watch: {
         chat_input: function(new_input) {
@@ -36,9 +38,18 @@ const container = new Vue({
     },
     methods: {
         send_message: function(e) {
-            socket.emit('messages', this.chat_input);
-            this.chat_input = '';
+            if (this.chat_input !== '') {
+                socket.emit('messages', this.chat_input);
+                this.chat_input = '';
+            }
         },
+        login: function(e) {
+            if (this.nickname_input !== '') {
+                let user = {nickname: this.nickname_input};
+                socket.emit('join', user, false);
+                this.is_loggedin = true;
+            }
+        }
     }
 });
 
@@ -46,21 +57,12 @@ const container = new Vue({
 var socket = io.connect(config.ServerUrl);
 
 socket.on('connect', function(data) {
-    let nickname = '';
-    let user = {};
-    let from_cookie = false;
-
     if (Cookies.get('user')) {
-        user = JSON.parse(Cookies.get('user'));
-        from_cookie = true;
+        let user = JSON.parse(Cookies.get('user'));
+        container.is_loggedin = true;
+
+        socket.emit('join', user, true);    
     }
-    else {
-        while (nickname === '' || nickname.length > 15) {
-            nickname = prompt("What is your nickname? (Shorter than 15 letters)");
-        }
-        user = {nickname: nickname};
-    }
-    socket.emit('join', user, from_cookie);
 });
 
 socket.on('save', function(user) {

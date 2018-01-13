@@ -20,7 +20,7 @@ const color_aray = {
     next_index: 0,
     array: ['red', 'blue', 'green', 'purple', 'magenta', 'darkred', 'dodgerblue', 'orange'],
     next: function() {
-        var toReturn = this.array[this.next_index];
+        let toReturn = this.array[this.next_index];
         this.next_index = ((this.next_index + 1) % this.array.length);
         
         return toReturn;
