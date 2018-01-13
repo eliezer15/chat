@@ -9,8 +9,14 @@
 </head>
 <body>
     <div id="container">
-        <h3 v-text="room_name"></h3>            
-        <div id="chat_window">
+        <h3 v-text="room_name"></h3>
+        <div id="login_form" v-show="!is_loggedin">
+            <form v-on:submit.prevent="login">
+                <input class="textbox" id="nickname_input" v-model="nickname_input" type="text" placeholder="Username" />
+                <button class="submit" id="login_button" type="submit" value="Login">Login</button>
+            </form>
+        </div>            
+        <div id="chat_window" v-show="is_loggedin">
             <div id="chat_messages">
                 <ul>
                     <chatmessage v-for="(message, index) in messages" :message="message" :key="index"></chatmessage>
@@ -19,9 +25,9 @@
             <span id="user_typing_message" v-text="user_typing_message"></span>
             <form v-on:submit.prevent="send_message" id="chat_form">
                 <div id="chat_input_wrapper"> <!--Need this to avoid random shrinking, source: https://stackoverflow.com/questions/44932403/input-shrinks-when-user-starts-typing -->
-                    <input v-model="chat_input" id="chat_input" type="text" placeholder="Enter message..." id="message" autocomplete="off"/>
+                    <input v-model="chat_input" class="textbox" id="chat_input" type="text" placeholder="Enter message..." autocomplete="off"/>
                 </div>
-                <button id="submit_button" type="submit" value="Send">Send</button>
+                <button class="submit" id="submit_message" type="submit" value="Send">Send</button>
             </form>
         </div>
         <div id="online_users">
@@ -38,6 +44,6 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
     <script src="config.js"></script>
-    <script src="bundle.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

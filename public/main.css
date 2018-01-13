@@ -41,6 +41,25 @@ body {
     float: left;
 }
 
+#login_form {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%) 
+}
+
+#nickname_input {
+    font-size: 16px;
+}
+
+#login_button {
+    font-size: 18px;
+    height: 40px;
+    width: 80px;
+}
+
 #chat_messages {
     padding: 0px 10px;
     height: 90%;
@@ -84,28 +103,36 @@ body {
     display: grid;
     grid-template-columns: 18fr 2fr;
 }
-#chat_input {
+
+.textbox {
     border-radius: 5px;
     border: 1px solid #ededed;
-    height: 20px;
     padding: 10px 10px;
+}
+
+#chat_input {
+    height: 20px;  
     font-size: 16px;
     width: 98%;
 }
 
-#submit_button {
+.submit {
     border: 1 px solid #13ddc2;
     font-size: 16px;
     color: white;
     background-color: #13ddc2;
     border-radius: 8px;
-    padding: 10px 15px;
-    margin-left: 10px;
 }
 
-#submit_button:hover {
+.submit:hover {
     background-color: #0a7f6f;
     cursor: pointer;
+}
+
+#submit_message {
+
+    padding: 10px 15px;
+    margin-left: 10px;
 }
 
 @media screen and (max-width: 600px) {
